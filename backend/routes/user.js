@@ -55,6 +55,7 @@ router.post("/signup", async (req, res) => {
   res.json({
     message: "User created successfully",
     token: token,
+    userId: userId,
   });
 });
 
@@ -124,24 +125,28 @@ router.put("/", authMiddleware, async (req, res) => {
 });
 
 router.get("/bulk", async (req, res) => {
-  const filter = req.query.filter || "";
-  console.log(filter);
-  const users = await User.find({
-    $or: [
-      {
-        firstName: {
-          $regex: filter,
-        },
-      },
-      {
-        lastName: {
-          $regex: filter,
-        },
-      },
-    ],
-  });
+  var filter = req.query.filter || "";
+  // console.log(typeof filter, filter);
+  // const users = await User.find({
+  //   $or: [
+  //     {
+  //       firstName: {
+  //         $regex: filter,
+  //         $options: "i",
+  //       },
+  //     },
+  //     {
+  //       lastName: {
+  //         $regex: filter,
+  //         $options: "i",
+  //       },
+  //     },
+  //   ],
+  // });
 
-  console.log(users);
+  const users = await User.find({});
+  // console.log(filter);
+  // console.log(users);
   res.json({
     user: users.map((user) => ({
       username: user.username,
@@ -150,7 +155,6 @@ router.get("/bulk", async (req, res) => {
       _id: user._id,
     })),
   });
-  return;
 });
 
 module.exports = router;
